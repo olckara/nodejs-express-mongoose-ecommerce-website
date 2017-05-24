@@ -1,0 +1,105 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/hilios/jQuery.countdown/master/dist/jquery.countdown.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<style>
+    button {
+        color: white;
+        background-color: brown;
+    }
+
+    .butik, .campaign {
+        margin-bottom: 15px;
+    }
+
+    .butik_name, .campaign_name, .butik_countdown {
+        height: 30px;
+        width: 100%;
+        background-color: black;
+        opacity: 0.4;
+        color: white;
+        text-align: center;
+    }
+
+    .butik_close_date {
+        display: none;
+    }
+
+    .navi {
+        background-color: brown;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".filter-button").click(function () {
+            var value = $(this).attr('data-filter');
+
+            if (value == "all") {
+                $('.filter').show('1000');
+            }
+            else {
+                $(".filter").not('.' + value).hide('3000');
+                $('.filter').filter('.' + value).show('3000');
+
+            }
+        });
+
+        if ($(".filter-button").removeClass("active")) {
+            $(this).removeClass("active");
+        }
+        $(this).addClass("active");
+
+        {{#each butik}}
+            $("#{{this._id}} > div.butik_countdown").countdown($("#{{this._id}} > div.butik_close_date").text(), function (event) {
+                $(this).text(
+                        event.strftime('%D gün %H:%M:%S')
+                );
+            });
+        {{/each}}
+    });
+</script>
+<body>
+<div class="container">
+    <img width="200px" src="images/logo.png">
+    <div class="row">
+        <div class="navi" align="center">
+            <button class="btn btn-lg filter-button" data-filter="all">All</button>
+            {{#each category}}
+                <button class="btn btn-lg filter-button" data-filter="{{this._id}}">{{this.name}}</button>
+            {{/each}}
+        </div>
+        <br/>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            {{#each butik}}
+                <div id="{{this._id}}"
+                     class="butik col-lg-12 col-md-12 col-sm-12 col-xs-12 filter {{this.category_id}}">
+                    <img src="{{this.picture}}/FFD700" class="img-responsive">
+                    <div class="butik_name">{{this.name}}</div>
+                    <div class="butik_countdown"></div>
+                    <div class="butik_close_date">{{formatDate this.close_date}}</div>
+                </div>
+            {{/each}}
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            {{#each campaign}}
+                <div class="campaign col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <img src="http://placehold.it/350x150/1E90FF" class="img-responsive">
+                    <div class="campaign_name">{{this.name}}</div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+</section>
+
+</body>
